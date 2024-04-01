@@ -1,4 +1,4 @@
-﻿namespace WeatherForecast.Services.LocationService
+﻿namespace WeatherForecast.Interfaces
 {
     public interface ILocationService
     {

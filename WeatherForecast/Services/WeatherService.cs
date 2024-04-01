@@ -1,17 +1,15 @@
 using Microsoft.Extensions.Caching.Memory;
-using WeatherForecast.Clients;
+using WeatherForecast.Interfaces;
 using WeatherForecast.Models;
-using WeatherForecast.Services.LocationService;
-using WeatherForecast.Services.WeatherService;
 
 public class WeatherService : IWeatherService
 {
     private readonly IMemoryCache _cache;
-    private readonly IEnumerable<IWeatherClient> _weatherClients;
+    private readonly IEnumerable<IWeatherForecastService> _weatherClients;
     private readonly ILogger<WeatherService> _logger;
     private readonly ILocationService _locationService;
 
-    public WeatherService(IMemoryCache cache, IEnumerable<IWeatherClient> weatherClients, ILocationService locationService, ILogger<WeatherService> logger)
+    public WeatherService(IMemoryCache cache, IEnumerable<IWeatherForecastService> weatherClients, ILocationService locationService, ILogger<WeatherService> logger)
     {
         _cache = cache;
         _weatherClients = weatherClients;

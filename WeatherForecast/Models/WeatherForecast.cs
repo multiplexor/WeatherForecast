@@ -2,9 +2,9 @@ namespace WeatherForecast.Models
 {
     public class Forecast
     {
-        public string provider { get; set; }
-        public double temperature_max { get; set; }
-        public double temperature_min { get; set; }
+        public string Provider { get; set; }
+        public double Temperature_max { get; set; }
+        public double Temperature_min { get; set; }
     }
 
     public class ForecastResponse

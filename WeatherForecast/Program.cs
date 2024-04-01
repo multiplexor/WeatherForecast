@@ -1,8 +1,8 @@
-using WeatherForecast.Clients;
 using WeatherForecast.Clients.OpenMeteoClient;
 using WeatherForecast.Clients.OpenWeatherMapClient;
+using WeatherForecast.Interfaces;
+using WeatherForecast.Services;
 using WeatherForecast.Services.LocationService;
-using WeatherForecast.Services.WeatherService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +12,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
-builder.Services.AddHttpClient<IWeatherClient, OpenMeteoClient>();
-builder.Services.AddHttpClient<IWeatherClient, OpenWeatherMapClient>();
-
+builder.Services.AddHttpClient<IOpenMeteoClient, OpenMeteoClient>();
+builder.Services.AddHttpClient<IOpenWeatherMapClient, OpenWeatherMapClient>();
 builder.Services.AddHttpClient<ILocationService, LocationService>();
 builder.Services.AddScoped<IWeatherService, WeatherService>();
+builder.Services.AddScoped<IWeatherForecastService, OpenMeteoService>();
+builder.Services.AddScoped<IWeatherForecastService, OpenWeatherMapService>();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();

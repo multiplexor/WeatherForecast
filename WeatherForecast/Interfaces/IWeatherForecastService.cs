@@ -1,8 +1,8 @@
 ﻿using WeatherForecast.Models;
 
-namespace WeatherForecast.Clients
+namespace WeatherForecast.Interfaces
 {
-    public interface IWeatherClient
+    public interface IWeatherForecastService
     {
         Task<Forecast?> GetWeatherForecast(DateTime date, double latitude, double longitude);
     }

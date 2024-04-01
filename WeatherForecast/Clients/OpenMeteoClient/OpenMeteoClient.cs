@@ -1,10 +1,10 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.Json;
-using WeatherForecast.Models;
+using WeatherForecast.Clients.OpenMeteoClient.Models;
 
 namespace WeatherForecast.Clients.OpenMeteoClient
 {
-    public class OpenMeteoClient : IWeatherClient
+    public class OpenMeteoClient : IOpenMeteoClient
     {
         private readonly HttpClient _httpClient;
 
@@ -15,24 +15,12 @@ namespace WeatherForecast.Clients.OpenMeteoClient
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<Forecast?> GetWeatherForecast(DateTime date, double latitude, double longitude)
+        public async Task<ForecastResponse?> GetWeatherForecast(double latitude, double longitude)
         {
             var response = await _httpClient.GetAsync($"forecast?latitude={latitude}&longitude={longitude}&daily=temperature_2m_max,temperature_2m_min");
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
-            var forecastResponse = JsonSerializer.Deserialize<Models.ForecastResponse>(content);
-            if (forecastResponse?.daily == null)
-                return null;
-
-            var forecasts = forecastResponse.daily;
-            int index = forecasts.time?.FindIndex(d => d.Date == date.Date) ?? -1;
-            if (index == -1)
-                return null;
-
-            double temperatureMax = forecasts.temperature_2m_max[index];
-            double temperatureMin = forecasts.temperature_2m_min[index];
-
-            return new Forecast() { provider = this.GetType().Name, temperature_max = temperatureMax, temperature_min = temperatureMin };
+            return JsonSerializer.Deserialize<ForecastResponse>(content);
         }
     }
 }

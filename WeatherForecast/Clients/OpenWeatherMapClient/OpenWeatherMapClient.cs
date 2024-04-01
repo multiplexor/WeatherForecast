@@ -4,7 +4,7 @@ using WeatherForecast.Clients.OpenWeatherMapClient.Models;
 
 namespace WeatherForecast.Clients.OpenWeatherMapClient
 {
-    public class OpenWeatherMapClient : IWeatherClient
+    public class OpenWeatherMapClient : IOpenWeatherMapClient
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
@@ -17,20 +17,12 @@ namespace WeatherForecast.Clients.OpenWeatherMapClient
             _apiKey = Environment.GetEnvironmentVariable("openweathermap-api-key") ?? string.Empty;
         }
 
-        public async Task<WeatherForecast.Models.Forecast?> GetWeatherForecast(DateTime date, double latitude, double longitude)
+        public async Task<Forecasts?> GetWeatherForecast(double latitude, double longitude)
         {
             var response = await _httpClient.GetAsync($"onecall?lat={latitude}&lon={longitude}&appid={_apiKey}&units=metric&exclude=current,minutely,hourly,alerts");
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
-            var forecast = JsonSerializer.Deserialize<Forecasts>(content);
-            if (forecast == null)
-                return null;
-
-            var forecastForDate = forecast.daily.FirstOrDefault(f => DateTimeOffset.FromUnixTimeSeconds(f.dt).DateTime.Date == date.Date);
-            if (forecastForDate == null)
-                return null;
-
-            return new WeatherForecast.Models.Forecast() { provider = this.GetType().Name, temperature_max = forecastForDate.temp.max, temperature_min = forecastForDate.temp.min };
+            return JsonSerializer.Deserialize<Forecasts>(content);
         }
     }
 }

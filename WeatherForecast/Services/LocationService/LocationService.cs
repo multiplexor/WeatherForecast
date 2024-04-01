@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
+using WeatherForecast.Interfaces;
 using WeatherForecast.Services.LocationService.Models;
 
 namespace WeatherForecast.Services.LocationService
@@ -10,7 +11,7 @@ namespace WeatherForecast.Services.LocationService
         public LocationService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("https://geocoding-api.open-meteo.com/v1");
+            _httpClient.BaseAddress = new Uri("https://geocoding-api.open-meteo.com/v1/");
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
         public async Task<(double latitude, double longitude)?> GetLocation(string city, string country)
