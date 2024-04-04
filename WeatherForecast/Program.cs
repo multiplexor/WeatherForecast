@@ -19,6 +19,7 @@ builder.Services.AddScoped<IWeatherService, WeatherService>();
 builder.Services.AddScoped<IWeatherForecastService, OpenMeteoService>();
 builder.Services.AddScoped<IWeatherForecastService, OpenWeatherMapService>();
 builder.Services.AddSwaggerGen();
+builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
 

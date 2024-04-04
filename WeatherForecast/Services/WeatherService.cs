@@ -21,12 +21,14 @@ public class WeatherService : IWeatherService
     {
         if (_weatherClients == null || !_weatherClients.Any())
         {
+            _logger.LogWarning("No weather forecast services available.");
             return null;
         }
 
         var cacheKey = $"{date}-{city}-{country}";
         if (_cache.TryGetValue(cacheKey, out ForecastResponse? cachedForecast))
         {
+            _logger.LogInformation("Retrieved forecast from cache.");
             return cachedForecast;
         }
 
@@ -34,6 +36,7 @@ public class WeatherService : IWeatherService
         try
         {
             location = await _locationService.GetLocation(city, country);
+            _logger.LogInformation("Retrieved location: {City}, {Country}", city, country);
         }
         catch (Exception ex)
         {
@@ -41,7 +44,10 @@ public class WeatherService : IWeatherService
             return null;
         }
         if (location == null)
+        {
+            _logger.LogWarning("Location not found for {City}, {Country}", city, country);
             return null;
+        }
 
         List<Task<Forecast?>> forecastTasks = new List<Task<Forecast?>>();
         foreach (var weather in _weatherClients)
@@ -50,7 +56,9 @@ public class WeatherService : IWeatherService
             {
                 try
                 {
-                    return await weather.GetWeatherForecast(date, location.Value.latitude, location.Value.longitude);
+                    var forecast = await weather.GetWeatherForecast(date, location.Value.latitude, location.Value.longitude);
+                    _logger.LogInformation("Retrieved weather forecast from {ServiceName}", weather.GetType().Name);
+                    return forecast;
                 }
                 catch (Exception ex)
                 {
@@ -71,6 +79,7 @@ public class WeatherService : IWeatherService
         };
 
         _cache.Set(cacheKey, forecastResponse, TimeSpan.FromMinutes(60));
+        _logger.LogInformation("Stored forecast in cache.");
 
         return forecastResponse;
     }

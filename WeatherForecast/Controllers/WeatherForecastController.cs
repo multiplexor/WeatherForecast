@@ -21,21 +21,25 @@ namespace WeatherForecast.Controllers
         {
             if (dateTime == default(DateTime) || string.IsNullOrEmpty(city) || string.IsNullOrEmpty(country))
             {
+                _logger.LogError("Invalid request parameters.");
                 return BadRequest("All parameters are required.");
             }
 
             DateTime date = dateTime.ToUniversalTime().Date;
             if (date > DateTime.UtcNow.AddDays(8).Date || date < DateTime.UtcNow.Date)
             {
+                _logger.LogError("Invalid date parameter.");
                 return BadRequest("Invalid date. Date should be today or no more than 8 days ahead.");
             }
 
             var forecast = await _weatherService.GetForecast(date, city, country);
             if (forecast == null)
             {
+                _logger.LogError("Failed to retrieve forecast.");
                 return StatusCode(500, "Failed to retrieve forecast");
             }
 
+            _logger.LogInformation("Forecast retrieved successfully.");
             return Ok(forecast);
         }
     }
