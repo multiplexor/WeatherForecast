@@ -7,7 +7,7 @@
 
     public class Forecast
     {
-        public DateTime valid_date { get; set; }
+        public long ts { get; set; }
         public double min_temp { get; set; }
         public double max_temp { get; set; }
     }

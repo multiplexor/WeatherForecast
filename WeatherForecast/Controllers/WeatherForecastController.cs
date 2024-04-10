@@ -25,12 +25,17 @@ namespace WeatherForecast.Controllers
                 _logger.LogError("Invalid request parameters.");
                 return BadRequest("All parameters are required.");
             }
+            if (dateTime.Kind != DateTimeKind.Utc)
+            {
+                _logger.LogError("Invalid request parameters. dateTime should be in UTC format.");
+                return BadRequest("dateTime should be in UTC format.");
+            }
 
-            DateTime date = dateTime.ToUniversalTime().Date;
-            if (date > DateTime.UtcNow.AddDays(8).Date || date < DateTime.UtcNow.Date)
+            DateTime date = dateTime.Date;
+            if (date > DateTime.UtcNow.AddDays(16).Date || date < DateTime.UtcNow.Date)
             {
                 _logger.LogError("Invalid date parameter.");
-                return BadRequest("Invalid date. Date should be today or no more than 8 days ahead.");
+                return BadRequest("Invalid date. Date should be today or no more than 16 days ahead.");
             }
 
             WeatherForecastResponse forecast;

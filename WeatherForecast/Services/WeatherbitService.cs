@@ -10,7 +10,7 @@ namespace WeatherForecast.Services
     {
         private readonly IWeatherbitClient _weatherbitClient;
         private readonly ILogger<OpenMeteoService> _logger;
-        private const string _provider = "weatherbit";
+        private const string _provider = "Weatherbit";
 
         public WeatherbitService(IWeatherbitClient weatherbitClient, ILogger<OpenMeteoService> logger)
         {
@@ -33,7 +33,7 @@ namespace WeatherForecast.Services
             if (forecastResponse?.data == null)
                 return ForecastResponse.FailureResult(_provider, "response doesn't contain forecast data");
 
-            var forecastForDate = forecastResponse.data.FirstOrDefault(f => f.valid_date.Date == date.Date);
+            var forecastForDate = forecastResponse.data.FirstOrDefault(f => DateTimeOffset.FromUnixTimeSeconds(f.ts).DateTime.Date == date.Date);
             if (forecastForDate == null)
                 return ForecastResponse.FailureResult(_provider, "response doesn't contain forecast data for requested date");
 

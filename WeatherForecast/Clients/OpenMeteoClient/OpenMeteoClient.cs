@@ -17,7 +17,7 @@ namespace WeatherForecast.Clients.OpenMeteoClient
 
         public async Task<ForecastResponse?> GetWeatherForecast(double latitude, double longitude)
         {
-            var response = await _httpClient.GetAsync($"forecast?latitude={latitude}&longitude={longitude}&daily=temperature_2m_max,temperature_2m_min");
+            var response = await _httpClient.GetAsync($"forecast?latitude={latitude}&longitude={longitude}&daily=temperature_2m_max,temperature_2m_min&forecast_days=16");
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<ForecastResponse>(content);
