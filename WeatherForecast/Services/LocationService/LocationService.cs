@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using WeatherForecast.Interfaces;
@@ -14,20 +15,21 @@ namespace WeatherForecast.Services.LocationService
             _httpClient.BaseAddress = new Uri("https://geocoding-api.open-meteo.com/v1/");
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
-        public async Task<(double latitude, double longitude)?> GetLocation(string city, string country)
+
+        public async Task<LocationResponse> GetLocation(string city, string country)
         {
             var response = await _httpClient.GetAsync($"search?name={city}&count=10&language=en&format=json");
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
             var locations = JsonSerializer.Deserialize<LocationsList>(content);
             if (locations == null)
-                return null;
+                throw new Exception($"Location service returned no results");
 
             var location = locations.results.FirstOrDefault(l => l.country == country);
             if (location == null)
-                return null;
+                throw new Exception($"Coordinates doesn't exist for city - {city}, country - {country}");
 
-            return (location.latitude, location.longitude);
+            return new LocationResponse { Latitude = location.latitude, Longitude = location.longitude };
         }
     }
 }

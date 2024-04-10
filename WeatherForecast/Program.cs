@@ -1,3 +1,4 @@
+using WeatherForecast;
 using WeatherForecast.Clients.OpenMeteoClient;
 using WeatherForecast.Clients.OpenWeatherMapClient;
 using WeatherForecast.Interfaces;
@@ -35,5 +36,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.Run();

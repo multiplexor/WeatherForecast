@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WeatherForecast.Interfaces;
+using WeatherForecast.Models;
 
 namespace WeatherForecast.Controllers
 {
@@ -32,11 +33,15 @@ namespace WeatherForecast.Controllers
                 return BadRequest("Invalid date. Date should be today or no more than 8 days ahead.");
             }
 
-            var forecast = await _weatherService.GetForecast(date, city, country);
-            if (forecast == null)
+            WeatherForecastResponse forecast;
+            try
             {
-                _logger.LogError("Failed to retrieve forecast.");
-                return StatusCode(500, "Failed to retrieve forecast");
+                forecast = await _weatherService.GetForecast(date, city, country);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "An error occurred while retrieving forecast.");
+                return StatusCode(500, "An error occurred while retrieving forecast.");
             }
 
             _logger.LogInformation("Forecast retrieved successfully.");

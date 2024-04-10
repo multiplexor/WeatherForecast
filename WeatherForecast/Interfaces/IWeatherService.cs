@@ -1,9 +1,10 @@
 using WeatherForecast.Models;
+using WeatherForecast.Services.LocationService;
 
 namespace WeatherForecast.Interfaces
 {
     public interface IWeatherService
     {
-        Task<ForecastResponse?> GetForecast(DateTime date, string city, string country);
+        Task<WeatherForecastResponse> GetForecast(DateTime date, string city, string country);
     }
 }

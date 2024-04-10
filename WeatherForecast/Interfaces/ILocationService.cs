@@ -1,7 +1,9 @@
-﻿namespace WeatherForecast.Interfaces
+﻿using WeatherForecast.Services.LocationService.Models;
+
+namespace WeatherForecast.Interfaces
 {
     public interface ILocationService
     {
-        Task<(double latitude, double longitude)?> GetLocation(string city, string country);
+        Task<LocationResponse> GetLocation(string city, string country);
     }
 }
