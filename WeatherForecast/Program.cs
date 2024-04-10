@@ -1,6 +1,7 @@
 using WeatherForecast;
 using WeatherForecast.Clients.OpenMeteoClient;
 using WeatherForecast.Clients.OpenWeatherMapClient;
+using WeatherForecast.Clients.WeatherbitClient;
 using WeatherForecast.Interfaces;
 using WeatherForecast.Services;
 using WeatherForecast.Services.LocationService;
@@ -15,10 +16,12 @@ builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<IOpenMeteoClient, OpenMeteoClient>();
 builder.Services.AddHttpClient<IOpenWeatherMapClient, OpenWeatherMapClient>();
+builder.Services.AddHttpClient<IWeatherbitClient, WeatherbitClient>();
 builder.Services.AddHttpClient<ILocationService, LocationService>();
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 builder.Services.AddScoped<IWeatherForecastService, OpenMeteoService>();
 builder.Services.AddScoped<IWeatherForecastService, OpenWeatherMapService>();
+builder.Services.AddScoped<IWeatherForecastService, WeatherbitService>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationInsightsTelemetry();
 
